@@ -1,7 +1,6 @@
 from Resources.Order import CreateGTT, GetGTTList, PlaceOrder
 from flask import Flask
 from flask_restful import Api
-from Utils.SmartAPI import get_connection
 from Resources.Account import GetHolding, GetPosition, GetProfile
 from Resources.History import GetHistory
 
