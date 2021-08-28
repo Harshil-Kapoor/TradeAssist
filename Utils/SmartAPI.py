@@ -56,7 +56,7 @@ def place_order(connection: SmartConnect, order: OrderParams) -> int:
         order -- OrderParams object
     """
     try:
-        orderId=connection.placeOrder(order)
+        orderId=connection.placeOrder(order.get_dict())
         print("The order id is: {}".format(orderId))
         return orderId
     except Exception as e:
@@ -69,7 +69,7 @@ def create_gtt(connection: SmartConnect, gtt: GTTParams) -> int:
         gtt -- GTTParams object
     """
     try:
-        ruleid=connection.gttCreateRule(gtt)
+        ruleid=connection.gttCreateRule(gtt.get_dict())
         print("The GTT rule id is: {}".format(ruleid))
         return ruleid
     except Exception as e:
@@ -95,7 +95,7 @@ def get_history(connection: SmartConnect, history: HistoryParams):
         gtt -- HistoricPArams object
     """
     try:
-        return connection.getCandleData(history)
+        return connection.getCandleData(history.get_dict())
     except Exception as e:
         print(f"Historic Api failed: {e}")
 
