@@ -108,3 +108,47 @@ class HistoryParams:
                 self.__setattr__(k, v)
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
+
+class Candle:
+    def __init__(self, obj):
+        """ Class defining paramteres for a candle\n
+            Accepts Structure:\n
+            [
+                "2021-02-10T09:15:00+05:30",
+               394.05,
+               397.7,
+               394,
+               396.3,
+               722616
+            ]
+        """
+        self.keys = [
+            "timestamp",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume"
+        ]
+        dict = {k: v for k,v in zip(self.keys, obj)}
+        for k, v in dict.items():
+            if k in self.keys:
+                self.__setattr__(k, v)
+        
+        if self.close >= self.open:
+            self.color = "green"
+        else:
+            self.color = "red"
+        
+        self.size = abs(self.high - self.low)
+        self.body = abs(self.close - self.open)
+
+        self.keys.insert("color")
+        self.keys.insert("size")
+        self.keys.insert("body")
+
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
+
+    def get_body_ratio(self):
+        return self.body / self.size
