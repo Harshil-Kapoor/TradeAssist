@@ -7,8 +7,14 @@ from Utils.SmartAPI import get_connection, get_history
 class GetHistory(Resource):
     def post(self):
         """ Endpoint for getting history\n
-            Keyword Arguments:\n
-            connection -- SmartConnect object
+            Accepts Input:\n
+            {
+                "exchange": "NSE",
+                "symboltoken": "3045",
+                "interval": "ONE_MINUTE",
+                "fromdate": "2021-02-08 09:00", 
+                "todate": "2021-02-08 09:16"\n
+            }
         """
         try:
             connection, data = get_connection()

@@ -2,7 +2,7 @@ class OrderParams:
     def __init__(self, obj):
         """ Class defining Order structure\n
         Accepts Structure:\n
-        orderparams = {
+        {
             "variety": "NORMAL",
             "tradingsymbol": "SBIN-EQ",
             "symboltoken": "3045",
@@ -47,7 +47,7 @@ class GTTParams:
     def __init__(self, obj):
         """ Class defining GTT structure\n
             Accepts Structure:\n
-            gttCreateParams={
+            {
                 "tradingsymbol" : "SBIN-EQ",
                 "symboltoken" : "3045",
                 "exchange" : "NSE", 
@@ -85,7 +85,7 @@ class HistoryParams:
     def __init__(self, obj):
         """ Class defining paramteres for getting historic data\n
             Accepts Structure:\n
-            historicParam={
+            {
                 "exchange": "NSE",
                 "symboltoken": "3045",
                 "interval": "ONE_MINUTE",

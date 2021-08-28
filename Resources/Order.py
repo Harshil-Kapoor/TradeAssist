@@ -7,8 +7,21 @@ from Utils.SmartAPI import create_gtt, get_connection, get_gtt_list, place_order
 class PlaceOrder(Resource):
     def post(self):
         """ Endpoint for placing an order\n
-            Keyword Arguments:\n
-            connection -- SmartConnect object
+            Accepts Input:\n
+            {
+                "variety": "NORMAL",
+                "tradingsymbol": "SBIN-EQ",
+                "symboltoken": "3045",
+                "transactiontype": "BUY",
+                "exchange": "NSE",
+                "ordertype": "LIMIT",
+                "producttype": "INTRADAY",
+                "duration": "DAY",
+                "price": "19500",
+                "squareoff": "0",
+                "stoploss": "0",
+                "quantity": "1"\n
+            }
         """
         try:
             connection, data = get_connection()
@@ -21,8 +34,19 @@ class PlaceOrder(Resource):
 class CreateGTT(Resource):
     def post(self):
         """ Endpoint for creating a Good To Go Trigger (GTT)\n
-            Keyword Arguments:\n
-            connection -- SmartConnect object
+            Accepts Input:\n
+            {
+                "tradingsymbol" : "SBIN-EQ",
+                "symboltoken" : "3045",
+                "exchange" : "NSE", 
+                "producttype" : "MARGIN",
+                "transactiontype" : "BUY",
+                "price" : 100000,
+                "qty" : 10,
+                "disclosedqty": 10,
+                "triggerprice" : 200000,
+                "timeperiod" : 365\n
+            }
         """
         try:
             connection, data = get_connection()
