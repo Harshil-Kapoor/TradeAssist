@@ -3,6 +3,7 @@ from flask import Flask
 from flask_restful import Api
 from Resources.Account import GetHolding, GetPosition, GetProfile
 from Resources.History import GetHistory
+import os
 
 
 app = Flask(__name__)
@@ -17,4 +18,7 @@ api.add_resource(CreateGTT, '/createGTT')
 api.add_resource(GetGTTList, '/getGTTList')
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    if os.environ["Angel_ENV"] == "PRODUCTION":
+        app.run(debug=True)
+    else:
+        app.run(port=5001, debug=True)
