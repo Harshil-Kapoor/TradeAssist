@@ -6,8 +6,13 @@ from Utils.SmartAPI import create_gtt, get_connection, get_gtt_list, place_order
 
 class PlaceOrder(Resource):
     def post(self):
+        """ Endpoint for placing an order\n
+            Keyword Arguments:\n
+            connection -- SmartConnect object
+        """
         try:
-            order_id = place_order(get_connection(), OrderParams(request.get_json()))
+            connection, data = get_connection()
+            order_id = place_order(connection, OrderParams(request.get_json()))
         except Exception as e:
             return {"message": f"An error occurred while placing order: {e}."}, 500
 
@@ -15,8 +20,13 @@ class PlaceOrder(Resource):
 
 class CreateGTT(Resource):
     def post(self):
+        """ Endpoint for creating a Good To Go Trigger (GTT)\n
+            Keyword Arguments:\n
+            connection -- SmartConnect object
+        """
         try:
-            gtt_id = create_gtt(get_connection(), GTTParams(request.get_json()))
+            connection, data = get_connection()
+            gtt_id = create_gtt(connection, GTTParams(request.get_json()))
         except Exception as e:
             return {"message": f"An error occurred while getting historic data: {e}."}, 500
 
@@ -24,8 +34,13 @@ class CreateGTT(Resource):
 
 class GetGTTList(Resource):
     def get(self):
+        """ Endpoint for getting list of GTTs created\n
+            Keyword Arguments:\n
+            connection -- SmartConnect object
+        """
         try:
-            gtt_list = get_gtt_list(get_connection())
+            connection, data = get_connection()
+            gtt_list = get_gtt_list(connection)
         except Exception as e:
             return {"message": f"An error occurred while getting historic data: {e}."}, 500
 
