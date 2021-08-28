@@ -1,3 +1,4 @@
+from Resources.Strategies import MovementAnalysis
 from Resources.Order import CreateGTT, GetGTTList, PlaceOrder
 from flask import Flask
 from flask_restful import Api
@@ -16,6 +17,7 @@ api.add_resource(GetProfile, '/getPosition')
 api.add_resource(PlaceOrder, '/placeOrder')
 api.add_resource(CreateGTT, '/createGTT')
 api.add_resource(GetGTTList, '/getGTTList')
+api.add_resource(MovementAnalysis, '/analyseMovement')
 
 if __name__ == '__main__':
     if os.environ["ANGEL_ENV"] == "PRODUCTION":
