@@ -40,6 +40,8 @@ class OrderParams:
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
 
 class GTTParams:
     def __init__(self, obj):
@@ -76,6 +78,8 @@ class GTTParams:
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
 
 class HistoryParams:
     def __init__(self, obj):
@@ -102,3 +106,5 @@ class HistoryParams:
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
