@@ -5,14 +5,14 @@ import os
 
 def get_connection() -> Tuple[SmartConnect, bytes]:
     #create object of call
-    connection=SmartConnect(api_key=os.environ['API_KEY'])
+    connection=SmartConnect(api_key=os.environ['ANGEL_API_KEY'])
     # ,
                     #optional
                     #access_token = "your access token",
                     #refresh_token = "your refresh_token")
 
     #login api call
-    data = connection.generateSession(os.environ['USERNAME'],os.environ['PASSWORD'])
+    data = connection.generateSession(os.environ['ANGEL_USER'],os.environ['ANGEL_PASS'])
 
     #fetch the feedtoken
     # feedToken=connection.getfeedToken()
