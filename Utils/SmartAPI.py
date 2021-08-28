@@ -1,17 +1,18 @@
 from typing import Tuple
 from smartapi import SmartConnect
 from Models.models import HistoryParams, OrderParams, GTTParams
+import os
 
 def get_connection() -> Tuple[SmartConnect, bytes]:
     #create object of call
-    connection=SmartConnect(api_key="ILnSIQp8")
+    connection=SmartConnect(api_key=os.environ['API_KEY'])
     # ,
                     #optional
                     #access_token = "your access token",
                     #refresh_token = "your refresh_token")
 
     #login api call
-    data = connection.generateSession("","")
+    data = connection.generateSession(os.environ['USERNAME'],os.environ['PASSWORD'])
 
     #fetch the feedtoken
     # feedToken=connection.getfeedToken()
