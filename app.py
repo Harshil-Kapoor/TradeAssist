@@ -18,7 +18,7 @@ api.add_resource(CreateGTT, '/createGTT')
 api.add_resource(GetGTTList, '/getGTTList')
 
 if __name__ == '__main__':
-    if os.environ["Angel_ENV"] == "PRODUCTION":
+    if os.environ["ANGEL_ENV"] == "PRODUCTION":
         app.run(debug=True)
     else:
         app.run(port=5001, debug=True)
