@@ -49,7 +49,7 @@ class MovementAnalysis(Resource):
         monotonically_increasing = all(x < y for x, y in zip(candle_sizes, candle_sizes[1:]))
         monotonically_dereasing = all(x > y for x, y in zip(candle_sizes, candle_sizes[1:]))
         body_proportion_flag = all([candle.get_body_ratio() >= body_ratio_threshold for candle in candles])
-        swing_flag = candles[1].close >= candles[0].close and candles[1].close <= candles[2].close
+        swing_flag = candles[1].close >= candles[0].close and candles[1].close >= candles[2].close
 
         if monotonically_increasing and body_proportion_flag and swing_flag:
             if short_candle_flag:
