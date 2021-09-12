@@ -1,3 +1,4 @@
+from Utils.Utils import get_candles
 from datetime import datetime, timedelta
 from typing import List
 from flask.json import jsonify
@@ -41,7 +42,7 @@ class MovementAnalysis(Resource):
         except:
             return {"message": "An error occurred while getting historic data."}, 500
         
-        candles: List[Candle] = self.get_candles(history["data"])
+        candles: List[Candle] = get_candles(history["data"])
         candle_sizes = [candle.size for candle in candles]
 
         short_candle_flag: bool = candles[0].color == "green" and candles[1].color == "green" and candles[2].color == "red"
@@ -68,6 +69,3 @@ class MovementAnalysis(Resource):
         }
 
         return jsonify(response)
-    
-    def get_candles(self, candleData: List[List]) -> List[Candle]:
-        return [Candle(candle) for candle in candleData]
