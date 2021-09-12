@@ -1,6 +1,8 @@
+from Utils.Utils import get_candles
+import datetime
 from typing import Tuple
 from smartapi import SmartConnect
-from Models.models import HistoryParams, OrderParams, GTTParams
+from Models.models import HistoryParams, OrderParams, GTTParams, Postion
 import os
 
 def get_connection() -> Tuple[SmartConnect, bytes]:
@@ -111,3 +113,22 @@ def logout_session(connection: SmartConnect):
         return logout
     except Exception as e:
         print(f"Logout failed: {e}")
+
+def get_current_value(connection: SmartConnect, position: Postion):
+    """ Get current value for given position\n
+        Keyword Arguments:\n
+        connection -- SmartConnect object\n
+        position -- Position object
+    """
+    try:
+        today = datetime.now()
+        history = get_history(connection, HistoryParams({
+            "exchange": position.exchange,
+            "symboltoken": position.symbolToken,
+            "interval": "ONE_MINUTE",
+            "fromdate": today.strftime("%Y-%m-%d %H:%M"),
+            "todate": today.strftime("%Y-%m-%d %H:%M")
+        }))
+        return get_candles(history["data"])[-1].close
+    except Exception as e:
+        print(f"Get current value failed: {e}")
