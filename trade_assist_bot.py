@@ -8,12 +8,15 @@ Basic inline bot example. Applies different text transformations.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
+from Utils.ChatbotUtils import format_position_reply, format_positions
 import logging
 from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, ParseMode, InputTextMessageContent, Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext
 from telegram.utils.helpers import escape_markdown
+from Utils.SmartAPI import get_connection, get_history, get_holding, get_position, place_order
+from Utils.Utils import format_holdings, format_positions, get_candles
 
 # Enable logging
 logging.basicConfig(
@@ -37,10 +40,28 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def inlinequery(update: Update, context: CallbackContext) -> None:
     """Handle the inline query."""
-    query = update.inline_query.query
+    query = update.inline_query.query.split(' ')
 
-    if query == "":
-        return
+    try:
+        connection, data = get_connection()
+    except:
+        update.inline_query.answer("Could not connect to Trading API.", is_personal=True)
+    
+    if query[0] == "positions":
+        positions = format_positions(get_position(connection))
+        lines = [position.get_summary() for position in positions]
+        for position in lines:
+            update.inline_query.answer(position, is_personal=True)
+    elif query[0] == "holdings":
+        holdings = format_holdings(get_holding(connection))
+        lines = [holding.get_summary() for holding in holdings]
+        for holding in lines:
+            update.inline_query.answer(holding, is_personal=True)
+    elif query[0] == "history":
+        candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
+        lines = [candle.get_summary() for candle in candles]
+        for holding in lines:
+            update.inline_query.answer(holding, is_personal=True)
 
     results = [
         InlineQueryResultArticle(
@@ -70,7 +91,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Run the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater("TOKEN")
+    updater = Updater("1981900858:AAHkcx3FHfJvCO-eTbT2_4pnUKP6lBCnNQc")
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
