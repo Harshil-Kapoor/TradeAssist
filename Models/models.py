@@ -249,7 +249,7 @@ class Postion:
         return {k: self.__dict__[k] for k in self.keys}
 
     def get_summary(self):
-        if self.position is "BUY":
+        if self.position == "BUY":
             return f'''Symbol: {self.tradingsymbol}
                 Avg. Buy Price: {self.buyavgprice}\n
                 Current Price: {self.current}\n
