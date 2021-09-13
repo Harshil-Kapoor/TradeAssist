@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn trade_assist_bot:trade_assist_bot
