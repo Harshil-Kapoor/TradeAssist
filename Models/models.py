@@ -1,5 +1,3 @@
-from Utils.SmartAPI import get_connection, get_current_value
-
 class OrderParams:
     def __init__(self, obj):
         """ Class defining Order structure\n
@@ -19,7 +17,8 @@ class OrderParams:
             "quantity": "1"\n
             }
         """
-        self.keys = ["tradingsymbol",
+        self.keys = [
+            "tradingsymbol",
             "symboltoken",
             "transactiontype",
             "price",
@@ -42,8 +41,10 @@ class OrderParams:
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
+
 
 class GTTParams:
     def __init__(self, obj):
@@ -52,7 +53,7 @@ class GTTParams:
             {
                 "tradingsymbol" : "SBIN-EQ",
                 "symboltoken" : "3045",
-                "exchange" : "NSE", 
+                "exchange" : "NSE",
                 "producttype" : "MARGIN",
                 "transactiontype" : "BUY",
                 "price" : 100000,
@@ -62,7 +63,8 @@ class GTTParams:
                 "timeperiod" : 365\n
             }
         """
-        self.keys = ["tradingsymbol",
+        self.keys = [
+            "tradingsymbol",
             "symboltoken",
             "exchange",
             "producttype",
@@ -73,15 +75,17 @@ class GTTParams:
             "triggerprice",
             "timeperiod"
         ]
-            
+
         self.exchange = "NSE"
         self.producttype = "MARGIN"
         self.transactiontype = "BUY"
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
+
 
 class HistoryParams:
     def __init__(self, obj):
@@ -102,14 +106,16 @@ class HistoryParams:
             "fromdate",
             "todate"
         ]
-            
+
         self.exchange = "NSE"
         self.interval = "ONE_MINUTE"
         for k, v in obj.items():
             if k in self.keys:
                 self.__setattr__(k, v)
+
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
+
 
 class Candle:
     def __init__(self, obj):
@@ -132,16 +138,16 @@ class Candle:
             "close",
             "volume"
         ]
-        dict = {k: v for k,v in zip(self.keys, obj)}
+        dict = {k: v for k, v in zip(self.keys, obj)}
         for k, v in dict.items():
             if k in self.keys:
                 self.__setattr__(k, v)
-        
+
         if self.close >= self.open:
             self.color = "green"
         else:
             self.color = "red"
-        
+
         self.size = abs(self.high - self.low)
         self.body = abs(self.close - self.open)
 
@@ -154,7 +160,7 @@ class Candle:
 
     def get_body_ratio(self):
         return self.body / self.size
-    
+
     def get_summary(self):
         return f'''Timestamp: {self.timestamp}\n
             Open: {self.open}\n
@@ -162,6 +168,7 @@ class Candle:
             Low: {self.low}\n
             Close: {self.close}\n
             Volume: {self.volume}'''
+
 
 class Postion:
     def __init__(self, obj):
@@ -229,21 +236,10 @@ class Postion:
             "netprice"
         ]
 
-        dict = {k: v for k,v in zip(self.keys, obj)}
+        dict = {k: v for k, v in zip(self.keys, obj)}
         for k, v in dict.items():
             if k in self.keys:
                 self.__setattr__(k, v)
-        
-        connection, data = get_connection()
-        self.current = get_current_value(connection, self)
-        self.pl = self.current - self.netvalue
-        self.netchange = self.pl / self.avgnetprice
-        self.position = "BUY" if self.totalbuyvalue != 0 else "SELL"
-
-        self.keys.insert("current")
-        self.keys.insert("pl")
-        self.keys.insert("netchange")
-        self.keys.insert("position")
 
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
@@ -264,6 +260,18 @@ class Postion:
                 Quantity: {self.sellqty}\n
                 Net Price: {self.netprice}\n
                 Net Change: {self.netchange}'''
+
+    def set_position_properties(self, current_val_delegate):
+        self.current = current_val_delegate(self)
+        self.pl = self.current - self.netvalue
+        self.netchange = self.pl / self.avgnetprice
+        self.position = "BUY" if self.totalbuyvalue != 0 else "SELL"
+
+        self.keys.insert("current")
+        self.keys.insert("pl")
+        self.keys.insert("netchange")
+        self.keys.insert("position")
+
 
 class Holding:
     def __init__(self, obj):
@@ -299,7 +307,7 @@ class Holding:
             "haircut"
         ]
 
-        dict = {k: v for k,v in zip(self.keys, obj)}
+        dict = {k: v for k, v in zip(self.keys, obj)}
         for k, v in dict.items():
             if k in self.keys:
                 self.__setattr__(k, v)
