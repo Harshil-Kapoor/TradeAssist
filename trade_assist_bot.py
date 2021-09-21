@@ -8,14 +8,13 @@ Basic inline bot example. Applies different text transformations.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
-from Utils.ChatbotUtils import format_position_reply, format_positions
 import logging
 from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, ParseMode, InputTextMessageContent, Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext
 from telegram.utils.helpers import escape_markdown
-from Utils.SmartAPI import get_connection, get_history, get_holding, get_position, place_order
+from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
 from Utils.Utils import format_holdings, format_positions, get_candles
 
 # Enable logging
@@ -44,9 +43,9 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     try:
         connection, data = get_connection()
-    except:
+    except Exception:
         update.inline_query.answer("Could not connect to Trading API.", is_personal=True)
-    
+
     if query[0] == "positions":
         positions = format_positions(get_position(connection))
         lines = [position.get_summary() for position in positions]
