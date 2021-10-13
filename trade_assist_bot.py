@@ -72,10 +72,6 @@ def positions(update: Update, context: CallbackContext) -> None:
 def holdings(update: Update, context: CallbackContext) -> None:
     """Get the user holdings."""
     connection, data = get_connection()
-    userHoldings = format_holdings(get_holding(connection, logger))
-    lines = [holding.get_summary() for holding in userHoldings]
-
-    connection, data = get_connection()
     if connection is not None:
         update.message.reply_text("Connection established!")
     else:
