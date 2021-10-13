@@ -58,8 +58,8 @@ def positions(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("User positions retrieved!")
 
     # lines = [position.get_summary() for position in format_positions(userPositions)]
-    for position in userPositions:
-        update.message.reply_text(position)
+    for key, val in userPositions:
+        update.message.reply_text(f"{key}: {val}")
 
 
 def holdings(update: Update, context: CallbackContext) -> None:
