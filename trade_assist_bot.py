@@ -11,7 +11,7 @@ bot.
 import logging
 import os
 from telegram import Update
-from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext
+from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext, MessageHandler, Filters
 from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
 from Utils.Utils import format_holdings, format_positions, get_candles
 
@@ -21,6 +21,8 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+token = os.environ["BOT_TOKEN"]
+PORT = int(token)
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -33,6 +35,16 @@ def start(update: Update, context: CallbackContext) -> None:
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
+
+
+def echo(update: Update, context: CallbackContext) -> None:
+    """Echo the user message."""
+    update.message.reply_text(update.message.text)
+
+
+def error(update: Update, context: CallbackContext) -> None:
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:
@@ -91,7 +103,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Run the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(os.environ["BOT_TOKEN"])
+    updater = Updater(token)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -101,10 +113,22 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
+    dispatcher.add_handler(MessageHandler(Filters.text, echo))
+
+    # on inline command - perform the task requested
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
+    # log all errors
+    dispatcher.add_error_handler(error)
+
     # Start the Bot
-    updater.start_polling()
+    # updater.start_polling()
+
+    # Start the Bot
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=token)
+    updater.bot.setWebhook('https://trade-assist.herokuapp.com/' + token)
 
     # Block until the user presses Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
