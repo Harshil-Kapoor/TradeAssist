@@ -56,7 +56,9 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
     except Exception:
         update.inline_query.answer("Could not connect to Trading API.", is_personal=True)
 
-    if query[0] == "positions":
+    if query[0] == "echo":
+        update.inline_query.answer(query[1], is_personal=True)
+    elif query[0] == "positions":
         positions = format_positions(get_position(connection))
         lines = [position.get_summary() for position in positions]
         for position in lines:
