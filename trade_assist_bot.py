@@ -14,7 +14,7 @@ from telegram import Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext, MessageHandler, Filters
 from Models.models import HistoryParams
 from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
-from Utils.Utils import format_holdings, format_positions, get_candles
+from Utils.Utils import format_holdings, format_positions, get_candles, get_formatted_date, get_interval
 
 # Enable logging
 logging.basicConfig(
@@ -95,9 +95,9 @@ def history(update: Update, context: CallbackContext) -> None:
     historicParams = HistoryParams({
         "exchange": context.args[0] or "NSE",
         "symboltoken": context.args[1],
-        "interval": context.args[2],
-        "fromdate": context.args[3],
-        "todate": context.args[4]
+        "interval": get_interval(context.args[2]),
+        "fromdate": get_formatted_date(context.args[3]),
+        "todate": get_formatted_date(context.args[4])
     })
 
     connection, data = get_connection()
