@@ -51,15 +51,15 @@ def positions(update: Update, context: CallbackContext) -> None:
     """Get the user positions."""
     connection, data = get_connection()
     if connection is not None:
-        update.message.reply_text("Connection established!", is_personal=True)
+        update.message.reply_text("Connection established!")
 
     userPositions = get_position(connection, logger)
     if userPositions is not None:
-        update.message.reply_text("User positions retrieved!", is_personal=True)
+        update.message.reply_text("User positions retrieved!")
 
     lines = [position.get_summary() for position in format_positions(userPositions)]
     for position in lines:
-        update.message.reply_text(position, is_personal=True)
+        update.message.reply_text(position)
 
 
 def holdings(update: Update, context: CallbackContext) -> None:
@@ -68,7 +68,7 @@ def holdings(update: Update, context: CallbackContext) -> None:
     userHoldings = format_holdings(get_holding(connection, logger))
     lines = [holding.get_summary() for holding in userHoldings]
     for holding in lines:
-        update.message.reply_text(holding, is_personal=True)
+        update.message.reply_text(holding)
 
 
 def history(update: Update, context: CallbackContext) -> None:
