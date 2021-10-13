@@ -21,8 +21,8 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-token = os.environ["BOT_TOKEN"]
-PORT = int(token)
+TOKEN = os.environ["BOT_TOKEN"]
+PORT = int(os.environ["PORT"])
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -103,7 +103,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Run the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(token)
+    updater = Updater(TOKEN)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -127,8 +127,8 @@ def main() -> None:
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=token)
-    updater.bot.setWebhook('https://trade-assist.herokuapp.com/' + token)
+                          url_path=TOKEN)
+    updater.bot.setWebhook('https://trade-assist.herokuapp.com/' + TOKEN)
 
     # Block until the user presses Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
