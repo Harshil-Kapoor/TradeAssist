@@ -22,7 +22,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 TOKEN = os.environ["BOT_TOKEN"]
-PORT = int(os.environ["PORT"])
+PORT = int(os.environ.get('PORT', 5000))
 
 
 # Define a few command handlers. These usually take the two arguments update and
