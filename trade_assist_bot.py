@@ -53,6 +53,7 @@ def positions(update: Update, context: CallbackContext) -> None:
     connection, data = get_connection()
     if connection is not None:
         update.message.reply_text("Connection established!")
+    else:
         return
 
     userPositions = get_position(connection, logger)
@@ -77,6 +78,7 @@ def holdings(update: Update, context: CallbackContext) -> None:
     connection, data = get_connection()
     if connection is not None:
         update.message.reply_text("Connection established!")
+    else:
         return
 
     userHoldings = get_holding(connection, logger)
@@ -105,6 +107,7 @@ def history(update: Update, context: CallbackContext) -> None:
     connection, data = get_connection()
     if connection is not None:
         update.message.reply_text("Connection established!")
+    else:
         return
 
     candles = get_history(connection, historicParams)
