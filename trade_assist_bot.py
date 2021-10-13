@@ -9,11 +9,9 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 import logging
-from uuid import uuid4
-
+import os
 from telegram import Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext
-from telegram.utils.helpers import escape_markdown
 from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
 from Utils.Utils import format_holdings, format_positions, get_candles
 
@@ -23,6 +21,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+# Create the Updater and pass it your bot's token.
+updater = Updater(os.environ["BOT_TOKEN"])
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -92,9 +93,6 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Run the bot."""
-    # Create the Updater and pass it your bot's token.
-    updater = Updater("1981900858:AAHkcx3FHfJvCO-eTbT2_4pnUKP6lBCnNQc")
-
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
