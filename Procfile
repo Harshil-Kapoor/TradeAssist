@@ -1,1 +1,1 @@
-web: gunicorn trade_assist_bot:trade_assist_bot
+web: gunicorn trade_assist_bot:updater
