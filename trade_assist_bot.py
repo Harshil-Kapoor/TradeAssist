@@ -57,8 +57,8 @@ def positions(update: Update, context: CallbackContext) -> None:
     if userPositions is not None:
         update.message.reply_text("User positions retrieved!")
 
-    lines = [position.get_summary() for position in format_positions(userPositions)]
-    for position in lines:
+    # lines = [position.get_summary() for position in format_positions(userPositions)]
+    for position in userPositions:
         update.message.reply_text(position)
 
 
