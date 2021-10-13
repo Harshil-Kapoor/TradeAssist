@@ -61,30 +61,33 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
         lines = [candle.get_summary() for candle in candles]
         for holding in lines:
             update.inline_query.answer(holding, is_personal=True)
+    else:
+        update.inline_query.answer("Invalid Command", is_personal=True)
 
-    results = [
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Caps",
-            input_message_content=InputTextMessageContent(query.upper()),
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Bold",
-            input_message_content=InputTextMessageContent(
-                f"*{escape_markdown(query)}*", parse_mode=ParseMode.MARKDOWN
-            ),
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Italic",
-            input_message_content=InputTextMessageContent(
-                f"_{escape_markdown(query)}_", parse_mode=ParseMode.MARKDOWN
-            ),
-        ),
-    ]
 
-    update.inline_query.answer(results)
+    # results = [
+    #     InlineQueryResultArticle(
+    #         id=str(uuid4()),
+    #         title="Caps",
+    #         input_message_content=InputTextMessageContent(query.upper()),
+    #     ),
+    #     InlineQueryResultArticle(
+    #         id=str(uuid4()),
+    #         title="Bold",
+    #         input_message_content=InputTextMessageContent(
+    #             f"*{escape_markdown(query)}*", parse_mode=ParseMode.MARKDOWN
+    #         ),
+    #     ),
+    #     InlineQueryResultArticle(
+    #         id=str(uuid4()),
+    #         title="Italic",
+    #         input_message_content=InputTextMessageContent(
+    #             f"_{escape_markdown(query)}_", parse_mode=ParseMode.MARKDOWN
+    #         ),
+    #     ),
+    # ]
+
+    # update.inline_query.answer(results)
 
 
 def main() -> None:
