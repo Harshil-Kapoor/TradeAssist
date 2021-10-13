@@ -8,7 +8,6 @@ Basic inline bot example. Applies different text transformations.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
-import json
 import logging
 import os
 from telegram import Update
@@ -54,14 +53,13 @@ def positions(update: Update, context: CallbackContext) -> None:
     if connection is not None:
         update.message.reply_text("Connection established!")
 
-    userPositions = get_position(connection, logger)
+    userPositions: dict = get_position(connection, logger)
     if userPositions is not None:
         update.message.reply_text("User positions retrieved!")
 
     # lines = [position.get_summary() for position in format_positions(userPositions)]
-    # for key, val in userPositions:
-    #     update.message.reply_text(f"{key}: {val}")
-    update.message.reply_text(json.loads(userPositions))
+    for key in userPositions.keys():
+        update.message.reply_text(f"{key}: {userPositions[key]}")
 
 
 def holdings(update: Update, context: CallbackContext) -> None:
