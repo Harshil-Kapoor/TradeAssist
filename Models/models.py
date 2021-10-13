@@ -151,9 +151,9 @@ class Candle:
         self.size = abs(self.high - self.low)
         self.body = abs(self.close - self.open)
 
-        self.keys.insert("color")
-        self.keys.insert("size")
-        self.keys.insert("body")
+        self.keys.append("color")
+        self.keys.append("size")
+        self.keys.append("body")
 
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
@@ -267,10 +267,10 @@ class Postion:
         self.netchange = self.pl / self.avgnetprice
         self.position = "BUY" if self.totalbuyvalue != 0 else "SELL"
 
-        self.keys.insert("current")
-        self.keys.insert("pl")
-        self.keys.insert("netchange")
-        self.keys.insert("position")
+        self.keys.append("current")
+        self.keys.append("pl")
+        self.keys.append("netchange")
+        self.keys.append("position")
 
 
 class Holding:
