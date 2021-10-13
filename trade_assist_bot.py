@@ -47,6 +47,33 @@ def error(update: Update, context: CallbackContext) -> None:
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
+def positions(update: Update, context: CallbackContext) -> None:
+    """Get the user positions."""
+    connection, data = get_connection()
+    positions = format_positions(get_position(connection))
+    lines = [position.get_summary() for position in positions]
+    for position in lines:
+        update.message.reply_text(position, is_personal=True)
+
+
+def holdings(update: Update, context: CallbackContext) -> None:
+    """Get the user holdings."""
+    connection, data = get_connection()
+    holdings = format_holdings(get_holding(connection))
+    lines = [holding.get_summary() for holding in holdings]
+    for holding in lines:
+        update.message.reply_text(holding, is_personal=True)
+
+
+def history(update: Update, context: CallbackContext) -> None:
+    """Get historical data."""
+    connection, data = get_connection()
+    candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
+    lines = [candle.get_summary() for candle in candles]
+    for holding in lines:
+        update.message.reply_text(holding, is_personal=True)
+
+
 def inlinequery(update: Update, context: CallbackContext) -> None:
     """Handle the inline query."""
     query = update.inline_query.query.split(' ')
@@ -56,25 +83,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
     except Exception:
         update.inline_query.answer("Could not connect to Trading API.", is_personal=True)
 
-    if query[0] == "echo":
-        update.inline_query.answer(query[1], is_personal=True)
-    elif query[0] == "positions":
-        positions = format_positions(get_position(connection))
-        lines = [position.get_summary() for position in positions]
-        for position in lines:
-            update.inline_query.answer(position, is_personal=True)
-    elif query[0] == "holdings":
-        holdings = format_holdings(get_holding(connection))
-        lines = [holding.get_summary() for holding in holdings]
-        for holding in lines:
-            update.inline_query.answer(holding, is_personal=True)
-    elif query[0] == "history":
-        candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
-        lines = [candle.get_summary() for candle in candles]
-        for holding in lines:
-            update.inline_query.answer(holding, is_personal=True)
-    else:
-        update.inline_query.answer("Invalid Command", is_personal=True)
+    update.inline_query.answer("Invalid Command", is_personal=True)
 
 
     # results = [
@@ -112,7 +121,10 @@ def main() -> None:
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("help", help_command()))
+    dispatcher.add_handler(CommandHandler("positions", positions()))
+    dispatcher.add_handler(CommandHandler("holdings", holdings()))
+    dispatcher.add_handler(CommandHandler("history", history()))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text, echo))
