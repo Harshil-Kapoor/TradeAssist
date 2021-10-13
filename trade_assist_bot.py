@@ -50,8 +50,14 @@ def error(update: Update, context: CallbackContext) -> None:
 def positions(update: Update, context: CallbackContext) -> None:
     """Get the user positions."""
     connection, data = get_connection()
-    userPositions = format_positions(get_position(connection, logger))
-    lines = [position.get_summary() for position in userPositions]
+    if connection is not None:
+        update.message.reply_text("Connection established!", is_personal=True)
+
+    userPositions = get_position(connection, logger)
+    if userPositions is not None:
+        update.message.reply_text("User positions retrieved!", is_personal=True)
+
+    lines = [position.get_summary() for position in format_positions(userPositions)]
     for position in lines:
         update.message.reply_text(position, is_personal=True)
 
