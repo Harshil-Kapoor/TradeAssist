@@ -50,8 +50,8 @@ def error(update: Update, context: CallbackContext) -> None:
 def positions(update: Update, context: CallbackContext) -> None:
     """Get the user positions."""
     connection, data = get_connection()
-    positions = format_positions(get_position(connection))
-    lines = [position.get_summary() for position in positions]
+    userPositions = format_positions(get_position(connection))
+    lines = [position.get_summary() for position in userPositions]
     for position in lines:
         update.message.reply_text(position, is_personal=True)
 
@@ -59,8 +59,8 @@ def positions(update: Update, context: CallbackContext) -> None:
 def holdings(update: Update, context: CallbackContext) -> None:
     """Get the user holdings."""
     connection, data = get_connection()
-    holdings = format_holdings(get_holding(connection))
-    lines = [holding.get_summary() for holding in holdings]
+    userHoldings = format_holdings(get_holding(connection))
+    lines = [holding.get_summary() for holding in userHoldings]
     for holding in lines:
         update.message.reply_text(holding, is_personal=True)
 
