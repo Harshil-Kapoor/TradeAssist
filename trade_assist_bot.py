@@ -12,6 +12,7 @@ import logging
 import os
 from telegram import Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext, MessageHandler, Filters
+from Models.models import HistoryParams
 from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
 from Utils.Utils import format_holdings, format_positions, get_candles
 
@@ -52,12 +53,17 @@ def positions(update: Update, context: CallbackContext) -> None:
     connection, data = get_connection()
     if connection is not None:
         update.message.reply_text("Connection established!")
+        return
 
     userPositions = get_position(connection, logger)
     if userPositions is not None:
-        update.message.reply_text("User positions retrieved!")
+        if userPositions["data"] is not None:
+            update.message.reply_text("Positions have been retrieved!")
+        else:
+            update.message.reply_text("You have no open positions...")
+            return
 
-    lines = [position.get_summary() for position in format_positions(userPositions)]
+    lines = [position.get_summary() for position in format_positions(userPositions["data"])]
     for position in lines:
         update.message.reply_text(position)
 
@@ -67,17 +73,51 @@ def holdings(update: Update, context: CallbackContext) -> None:
     connection, data = get_connection()
     userHoldings = format_holdings(get_holding(connection, logger))
     lines = [holding.get_summary() for holding in userHoldings]
+
+    connection, data = get_connection()
+    if connection is not None:
+        update.message.reply_text("Connection established!")
+        return
+
+    userHoldings = get_holding(connection, logger)
+    if userHoldings is not None:
+        if userHoldings["data"] is not None:
+            update.message.reply_text("Holdings have been retrieved!")
+        else:
+            update.message.reply_text("You have no holdings...")
+            return
+
+    lines = [holding.get_summary() for holding in format_holdings(userHoldings["data"])]
     for holding in lines:
         update.message.reply_text(holding)
 
 
 def history(update: Update, context: CallbackContext) -> None:
     """Get historical data."""
-    # connection, data = get_connection()
-    # candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
-    # lines = [candle.get_summary() for candle in candles]
-    # for holding in lines:
-    #     update.message.reply_text(holding, is_personal=True)
+    historicParams = HistoryParams({
+        "exchange": context.args[0] or "NSE",
+        "symboltoken": context.args[1],
+        "interval": context.args[2],
+        "fromdate": context.args[3],
+        "todate": context.args[4]
+    })
+
+    connection, data = get_connection()
+    if connection is not None:
+        update.message.reply_text("Connection established!")
+        return
+
+    candles = get_history(connection, historicParams)
+    if candles is not None:
+        if candles["data"] is not None:
+            update.message.reply_text("History has been retrieved!")
+        else:
+            update.message.reply_text("Could not get History...")
+            return
+
+    lines = [candle.get_summary() for candle in get_candles(candles["data"])]
+    for candle in lines:
+        update.message.reply_text(candle, is_personal=True)
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:

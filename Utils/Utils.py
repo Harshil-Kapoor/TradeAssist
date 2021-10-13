@@ -7,8 +7,8 @@ def get_candles(candleData: List[List]) -> List[Candle]:
 
 
 def format_positions(positions: dict) -> List[Postion]:
-    return [Postion(position) for position in positions["data"]]
+    return [Postion(position) for position in positions]
 
 
 def format_holdings(holdings: dict) -> List[Holding]:
-    return [Holding(holding) for holding in holdings["data"]]
+    return [Holding(holding) for holding in holdings]
