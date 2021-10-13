@@ -53,13 +53,13 @@ def positions(update: Update, context: CallbackContext) -> None:
     if connection is not None:
         update.message.reply_text("Connection established!")
 
-    userPositions: dict = get_position(connection, logger)
+    userPositions = get_position(connection, logger)
     if userPositions is not None:
         update.message.reply_text("User positions retrieved!")
 
-    # lines = [position.get_summary() for position in format_positions(userPositions)]
-    for key in userPositions.keys():
-        update.message.reply_text(f"{key}: {userPositions[key]}")
+    lines = [position.get_summary() for position in format_positions(userPositions)]
+    for position in lines:
+        update.message.reply_text(position)
 
 
 def holdings(update: Update, context: CallbackContext) -> None:
