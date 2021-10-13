@@ -8,6 +8,7 @@ from Utils.SmartAPI import get_connection, get_history
 
 parser = reqparse.RequestParser()
 parser.add_argument('symbolToken', type=str)
+parser.add_argument('interval', type=str, default="ONE_DAY", required=False)
 parser.add_argument('frequency', type=int, default=3, required=False)
 parser.add_argument('body_ratio_threshold', type=float, default=0.45, required=False)
 
@@ -27,6 +28,7 @@ class MovementAnalysis(Resource):
         try:
             args = parser.parse_args()
             symbolToken = args['symbolToken']
+            interval = args['interval']
             delta = args['frequency']
             body_ratio_threshold = args['body_ratio_threshold']
 
@@ -36,7 +38,7 @@ class MovementAnalysis(Resource):
             history = get_history(connection, HistoryParams({
                 "exchange": "NSE",
                 "symboltoken": symbolToken,
-                "interval": "ONE_DAY",
+                "interval": interval,
                 "fromdate": before.strftime("%Y-%m-%d %H:%M"),
                 "todate": today.strftime("%Y-%m-%d %H:%M")
             }))
