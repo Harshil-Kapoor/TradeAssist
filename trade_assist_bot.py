@@ -22,9 +22,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-# Create the Updater and pass it your bot's token.
-updater = Updater(os.environ["BOT_TOKEN"])
-
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
@@ -93,6 +90,9 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Run the bot."""
+    # Create the Updater and pass it your bot's token.
+    updater = Updater(os.environ["BOT_TOKEN"])
+
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 

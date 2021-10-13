@@ -1,1 +1,1 @@
-web: gunicorn trade_assist_bot:updater
+web: python3 trade_assist_bot.py
