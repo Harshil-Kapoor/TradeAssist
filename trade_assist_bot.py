@@ -121,10 +121,10 @@ def main() -> None:
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command()))
-    dispatcher.add_handler(CommandHandler("positions", positions()))
-    dispatcher.add_handler(CommandHandler("holdings", holdings()))
-    dispatcher.add_handler(CommandHandler("history", history()))
+    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("positions", positions))
+    dispatcher.add_handler(CommandHandler("holdings", holdings))
+    dispatcher.add_handler(CommandHandler("history", history))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text, echo))
@@ -136,7 +136,7 @@ def main() -> None:
     dispatcher.add_error_handler(error)
 
     # Start the Bot
-    # updater.start_polling()
+    # updater.start_polling
 
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",
