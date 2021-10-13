@@ -50,7 +50,7 @@ def error(update: Update, context: CallbackContext) -> None:
 def positions(update: Update, context: CallbackContext) -> None:
     """Get the user positions."""
     connection, data = get_connection()
-    userPositions = format_positions(get_position(connection))
+    userPositions = format_positions(get_position(connection, logger))
     lines = [position.get_summary() for position in userPositions]
     for position in lines:
         update.message.reply_text(position, is_personal=True)
@@ -59,7 +59,7 @@ def positions(update: Update, context: CallbackContext) -> None:
 def holdings(update: Update, context: CallbackContext) -> None:
     """Get the user holdings."""
     connection, data = get_connection()
-    userHoldings = format_holdings(get_holding(connection))
+    userHoldings = format_holdings(get_holding(connection, logger))
     lines = [holding.get_summary() for holding in userHoldings]
     for holding in lines:
         update.message.reply_text(holding, is_personal=True)
@@ -67,11 +67,11 @@ def holdings(update: Update, context: CallbackContext) -> None:
 
 def history(update: Update, context: CallbackContext) -> None:
     """Get historical data."""
-    connection, data = get_connection()
-    candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
-    lines = [candle.get_summary() for candle in candles]
-    for holding in lines:
-        update.message.reply_text(holding, is_personal=True)
+    # connection, data = get_connection()
+    # candles = get_candles(get_history(connection, query[1:].__dict__)["data"])
+    # lines = [candle.get_summary() for candle in candles]
+    # for holding in lines:
+    #     update.message.reply_text(holding, is_personal=True)
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:

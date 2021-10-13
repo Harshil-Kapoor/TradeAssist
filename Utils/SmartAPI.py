@@ -1,4 +1,5 @@
 import datetime
+from logging import Logger
 from typing import Tuple
 from smartapi import SmartConnect
 from Models.models import Candle, HistoryParams, OrderParams, GTTParams, Postion
@@ -34,7 +35,7 @@ def get_user_profile(connection: SmartConnect, data: bytes):
         print(f"Could not get user profile: {e}")
 
 
-def get_holding(connection: SmartConnect):
+def get_holding(connection: SmartConnect, logger: Logger = None):
     """ Get Holding Information\n
         Keyword Arguments:\n
         connection -- SmartConnect object
@@ -42,10 +43,13 @@ def get_holding(connection: SmartConnect):
     try:
         return connection.holding()
     except Exception as e:
-        print(f"Could not get holdings: {e}")
+        if (logger is not None):
+            logger.warning(f"Could not get holdings: {e}")
+        else:
+            print(f"Could not get holdings: {e}")
 
 
-def get_position(connection: SmartConnect):
+def get_position(connection: SmartConnect, logger: Logger = None):
     """ Fetch Position Information\n
         Keyword Arguments:\n
         connection -- SmartConnect object
@@ -53,7 +57,10 @@ def get_position(connection: SmartConnect):
     try:
         return connection.position()
     except Exception as e:
-        print(f"Could not get positions: {e}")
+        if (logger is not None):
+            logger.warning(f"Could not get positions: {e}")
+        else:
+            print(f"Could not get positions: {e}")
 
 
 def place_order(connection: SmartConnect, order: OrderParams) -> int:
