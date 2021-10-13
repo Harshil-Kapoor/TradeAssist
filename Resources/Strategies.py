@@ -8,11 +8,13 @@ from Utils.SmartAPI import get_connection, get_history
 
 parser = reqparse.RequestParser()
 parser.add_argument('symbolToken', type=str)
-parser.add_argument('delta', type=int, default=3, required=False)
+parser.add_argument('interval', type=str, default="ONE_DAY", required=False)
+parser.add_argument('frequency', type=int, default=3, required=False)
 parser.add_argument('body_ratio_threshold', type=float, default=0.45, required=False)
 
+
 class MovementAnalysis(Resource):
-    def get(self):
+    def post(self):
         """ Endpoint for Movement Analysis\n
             Accepts Input:\n
             {
@@ -26,7 +28,8 @@ class MovementAnalysis(Resource):
         try:
             args = parser.parse_args()
             symbolToken = args['symbolToken']
-            delta = args['delta']
+            interval = args['interval']
+            delta = args['frequency']
             body_ratio_threshold = args['body_ratio_threshold']
 
             connection, data = get_connection()
@@ -35,12 +38,12 @@ class MovementAnalysis(Resource):
             history = get_history(connection, HistoryParams({
                 "exchange": "NSE",
                 "symboltoken": symbolToken,
-                "interval": "ONE_DAY",
-                "fromdate": today.strftime("%Y-%m-%d %H:%M"),
-                "todate": before.strftime("%Y-%m-%d %H:%M")
+                "interval": interval,
+                "fromdate": before.strftime("%Y-%m-%d %H:%M"),
+                "todate": today.strftime("%Y-%m-%d %H:%M")
             }))
-        except:
-            return {"message": "An error occurred while getting historic data."}, 500
+        except Exception as e:
+            return {"message": f"An error occurred while getting historic data: {e}."}, 500
         
         candles: List[Candle] = get_candles(history["data"])
         candle_sizes = [candle.size for candle in candles]
@@ -52,6 +55,7 @@ class MovementAnalysis(Resource):
         body_proportion_flag = all([candle.get_body_ratio() >= body_ratio_threshold for candle in candles])
         swing_flag = candles[1].close >= candles[0].close and candles[1].close >= candles[2].close
 
+        analysis = "INCONCLUSIVE"
         if monotonically_increasing and body_proportion_flag and swing_flag:
             if short_candle_flag:
                 analysis = "SHORT"
@@ -59,7 +63,7 @@ class MovementAnalysis(Resource):
                 analysis = "LONG"
 
         response = {
-            "candles": candles.__dict__,
+            "candles": [candle.get_dict() for candle in candles],
             "short_candle_flag": short_candle_flag,
             "long_candle_flag": long_candle_flag,
             "monotonically_increasing": monotonically_increasing,
