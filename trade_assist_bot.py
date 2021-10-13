@@ -116,7 +116,7 @@ def history(update: Update, context: CallbackContext) -> None:
 
     lines = [candle.get_summary() for candle in get_candles(candles["data"])]
     for candle in lines:
-        update.message.reply_text(candle, is_personal=True)
+        update.message.reply_text(candle)
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:
