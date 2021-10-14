@@ -1,4 +1,19 @@
 class OrderParams:
+    keys = [
+        "tradingsymbol",
+        "symboltoken",
+        "transactiontype",
+        "price",
+        "squareoff",
+        "stoploss",
+        "quantity",
+        "variety",
+        "exchange",
+        "ordertype",
+        "producttype",
+        "duration"
+    ]
+
     def __init__(self, tradingsymbol, symboltoken, transactiontype, price, squareoff, stoploss, quantity, variety, exchange, ordertype, producttype, duration) -> None:
         """ Class defining Order structure\n
             Keyword Arguments:\n
@@ -48,21 +63,6 @@ class OrderParams:
             }
         """
         params = cls('', '', '', '', '')
-        params.keys = [
-            "tradingsymbol",
-            "symboltoken",
-            "transactiontype",
-            "price",
-            "squareoff",
-            "stoploss",
-            "quantity",
-            "variety",
-            "exchange",
-            "ordertype",
-            "producttype",
-            "duration"
-        ]
-
         params.quantity = "1"
         params.variety = "NORMAL"
         params.exchange = "NSE"
@@ -79,6 +79,19 @@ class OrderParams:
 
 
 class GTTParams:
+    keys = [
+        "tradingsymbol",
+        "symboltoken",
+        "exchange",
+        "producttype",
+        "transactiontype",
+        "price",
+        "qty",
+        "disclosedqty",
+        "triggerprice",
+        "timeperiod"
+    ]
+
     def __init__(self, tradingsymbol, symboltoken, exchange, producttype, transactiontype, price, qty, disclosedqty, triggerprice, timeperiod) -> None:
         """ Class defining GTT structure\n
             Keyword Arguments:\n
@@ -122,19 +135,6 @@ class GTTParams:
             }
         """
         params = cls('', '', '', '', '')
-        params.keys = [
-            "tradingsymbol",
-            "symboltoken",
-            "exchange",
-            "producttype",
-            "transactiontype",
-            "price",
-            "qty",
-            "disclosedqty",
-            "triggerprice",
-            "timeperiod"
-        ]
-
         params.exchange = "NSE"
         params.producttype = "MARGIN"
         params.transactiontype = "BUY"
@@ -148,6 +148,14 @@ class GTTParams:
 
 
 class HistoryParams:
+    keys = [
+        "exchange",
+        "symboltoken",
+        "interval",
+        "fromdate",
+        "todate"
+    ]
+
     def __init__(self, exchange, symboltoken, interval, fromdate, todate) -> None:
         """ Class defining HistoryParams structure\n
             Keyword Arguments:\n
@@ -176,14 +184,6 @@ class HistoryParams:
             }
         """
         params = cls('', '', '', '', '')
-        params.keys = [
-            "exchange",
-            "symboltoken",
-            "interval",
-            "fromdate",
-            "todate"
-        ]
-
         params.exchange = "NSE"
         params.interval = "ONE_MINUTE"
         for k, v in obj.items():
@@ -458,7 +458,9 @@ class MovementAnalysisResponse:
         self.candles = candles
 
     def get_dict(self):
-        return {k: self.__dict__[k] for k in self.keys}
+        return {k: self.__dict__[k] if k != "candles"
+                else [candle.get_dict() for candle in self.__dict__[k]]
+                for k in self.keys}
 
     def get_summary(self):
         return f'''Analyis: {self.analysis}
