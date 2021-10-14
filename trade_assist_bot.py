@@ -123,7 +123,7 @@ def analyzeMovement(update: Update, context: CallbackContext) -> None:
     """Perform Monement analysis."""
     params = MovementAnalysisParams(
         symbolToken=context.args[0],
-        interval=context.args[1],
+        interval=get_interval(context.args[1]),
         delta=context.args[2],
         body_ratio_threshold=context.args[3],
         exchange=context.args[4])
@@ -140,6 +140,7 @@ def analyzeMovement(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(result[0])
     update.message.reply_text(result[1])
+    # update.message.reply_text(result.get_summary())
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:
