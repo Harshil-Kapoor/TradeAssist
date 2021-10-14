@@ -126,7 +126,7 @@ def analyzeMovement(update: Update, context: CallbackContext) -> None:
         interval=context.args[1],
         delta=context.args[2],
         body_ratio_threshold=context.args[3],
-        exchange=context.args[5])
+        exchange=context.args[4])
 
     connection, data = get_connection()
     if connection is not None:
