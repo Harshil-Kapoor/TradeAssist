@@ -54,7 +54,8 @@ def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -
     try:
         candles: List[Candle] = get_candles(history["data"])
     except Exception as e:
-        return {"message": f"Could not get candles: {e}."}, 500
+        return {"message": f"{params.get_dict()}"}, 500
+        # return {"message": f"Could not get candles: {e}."}, 500
 
     candle_sizes = [candle.size for candle in candles]
 
