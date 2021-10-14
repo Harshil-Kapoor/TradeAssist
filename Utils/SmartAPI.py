@@ -139,13 +139,12 @@ def get_current_value(connection: SmartConnect, position: Postion):
     """
     try:
         today = datetime.now()
-        history = get_history(connection, HistoryParams({
-            "exchange": position.exchange,
-            "symboltoken": position.symbolToken,
-            "interval": "ONE_MINUTE",
-            "fromdate": today.strftime("%Y-%m-%d %H:%M"),
-            "todate": today.strftime("%Y-%m-%d %H:%M")
-        }))
+        history = get_history(connection, HistoryParams(
+            exchange=position.exchange,
+            symboltoken=position.symbolToken,
+            interval="ONE_MINUTE",
+            fromdate=today.strftime("%Y-%m-%d %H:%M"),
+            todate=today.strftime("%Y-%m-%d %H:%M")))
         return Candle(history["data"][-1]).close
     except Exception as e:
         print(f"Get current value failed: {e}")

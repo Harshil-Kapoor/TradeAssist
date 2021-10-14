@@ -19,7 +19,7 @@ class GetHistory(Resource):
         """
         try:
             connection, data = get_connection()
-            history = get_history(connection, HistoryParams(request.get_json()))
+            history = get_history(connection, HistoryParams.fromJson(request.get_json()))
         except Exception as e:
             return {"message": f"An error occurred while getting historic data: {e}."}, 500
 

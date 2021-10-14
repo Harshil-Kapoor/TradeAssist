@@ -41,13 +41,12 @@ def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -
     try:
         today = datetime.now()
         before = datetime.now() - timedelta(days=int(params.delta))
-        history = get_history(connection, HistoryParams({
-            "exchange": params.exchange,
-            "symboltoken": params.symbolToken,
-            "interval": params.interval,
-            "fromdate": before.strftime("%Y-%m-%d %H:%M"),
-            "todate": today.strftime("%Y-%m-%d %H:%M")
-        }))
+        history = get_history(connection, HistoryParams(
+            exchange=params.exchange,
+            symboltoken=params.symbolToken,
+            interval=params.interval,
+            fromdate=before.strftime("%Y-%m-%d %H:%M"),
+            todate=today.strftime("%Y-%m-%d %H:%M")))
     except Exception as e:
         return {"message": f"An error occurred while getting historic data: {e}."}, 500
 

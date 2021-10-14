@@ -25,7 +25,7 @@ class PlaceOrder(Resource):
         """
         try:
             connection, data = get_connection()
-            order_id = place_order(connection, OrderParams(request.get_json()))
+            order_id = place_order(connection, OrderParams.fromJson(request.get_json()))
         except Exception as e:
             return {"message": f"An error occurred while placing order: {e}."}, 500
 
@@ -50,7 +50,7 @@ class CreateGTT(Resource):
         """
         try:
             connection, data = get_connection()
-            gtt_id = create_gtt(connection, GTTParams(request.get_json()))
+            gtt_id = create_gtt(connection, GTTParams.fromJson(request.get_json()))
         except Exception as e:
             return {"message": f"An error occurred while getting historic data: {e}."}, 500
 
