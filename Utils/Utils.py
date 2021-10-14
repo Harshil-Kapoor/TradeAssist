@@ -50,8 +50,12 @@ def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -
         }))
     except Exception as e:
         return {"message": f"An error occurred while getting historic data: {e}."}, 500
-    
-    candles: List[Candle] = get_candles(history["data"])
+
+    try:
+        candles: List[Candle] = get_candles(history["data"])
+    except Exception as e:
+        return {"message": f"Could not get candles: {e}."}, 500
+
     candle_sizes = [candle.size for candle in candles]
 
     short_candle_flag: bool = candles[0].color == "green" and candles[1].color == "green" and candles[2].color == "red"
