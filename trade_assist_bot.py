@@ -125,7 +125,7 @@ def analyzeMovement(update: Update, context: CallbackContext) -> None:
         symbolToken=context.args[0],
         interval=get_interval(context.args[1]),
         delta=context.args[2],
-        body_ratio_threshold=context.args[3],
+        body_ratio_threshold=float(context.args[3]),
         exchange=context.args[4])
 
     connection, data = get_connection()
