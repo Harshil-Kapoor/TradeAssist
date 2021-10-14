@@ -1,6 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
-from Models.models import Candle, Holding, Postion
+
+from smartapi.smartConnect import SmartConnect
+from Models.models import Candle, HistoryParams, Holding, MovementAnalysisParams, MovementAnalysisResponse, Postion
+from Utils.SmartAPI import get_history
 
 intervals = {
     '1m': 'ONE_MINUTE',
@@ -32,3 +35,37 @@ def get_interval(interval: str) -> str:
 
 def get_formatted_date(date: str) -> str:
     return datetime.strptime(date, '%Y/%m/%d-%H:%M').strftime("%Y-%m-%d %H:%M")
+
+
+def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -> MovementAnalysisResponse:
+    try:
+        today = datetime.now()
+        before = datetime.now() - timedelta(days=params.delta)
+        history = get_history(connection, HistoryParams({
+            "exchange": params.exchange,
+            "symboltoken": params.symboltoken,
+            "interval": params.interval,
+            "fromdate": before.strftime("%Y-%m-%d %H:%M"),
+            "todate": today.strftime("%Y-%m-%d %H:%M")
+        }))
+    except Exception as e:
+        return {"message": f"An error occurred while getting historic data: {e}."}, 500
+    
+    candles: List[Candle] = get_candles(history["data"])
+    candle_sizes = [candle.size for candle in candles]
+
+    short_candle_flag: bool = candles[0].color == "green" and candles[1].color == "green" and candles[2].color == "red"
+    long_candle_flag: bool = candles[0].color == "red" and candles[1].color == "red" and candles[2].color == "green"
+    monotonically_increasing = all(x < y for x, y in zip(candle_sizes, candle_sizes[1:]))
+    monotonically_dereasing = all(x > y for x, y in zip(candle_sizes, candle_sizes[1:]))
+    body_proportion_flag = all([candle.get_body_ratio() >= params.body_ratio_threshold for candle in candles])
+    swing_flag = candles[1].close >= candles[0].close and candles[1].close >= candles[2].close
+
+    analysis = "INCONCLUSIVE"
+    if monotonically_increasing and body_proportion_flag and swing_flag:
+        if short_candle_flag:
+            analysis = "SHORT"
+        elif long_candle_flag:
+            analysis = "LONG"
+    
+    return MovementAnalysisResponse(analysis, short_candle_flag, long_candle_flag, monotonically_increasing, monotonically_dereasing, swing_flag, candles)
