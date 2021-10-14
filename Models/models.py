@@ -319,3 +319,73 @@ class Holding:
         return f'''Symbol: {self.tradingsymbol}
             Quantity: {self.quantity}\n
             P&L: {self.profitandloss}'''
+
+
+class MovementAnalysisParams:
+    def __init__(self, exchange, symbolToken, interval, delta, body_ratio_threshold):
+        """ Class defining response for Movement analysis strategy\n
+            Keyword Arguments:\n
+            exchange -- Stock echange, defaults to NSE\n
+            symbolToken -- Symbol Token to perform movement analysis for\n
+            interval -- Interval for candles, defaults to 1 day\n
+            delta -- Number of candles for analysis, defaults to 3 candles\n
+            body_ratio_threshold -- Threshold for Body ratio, defaults to 0.5\n
+        """
+        self.keys = [
+            "exchange",
+            "symbolToken",
+            "interval",
+            "delta",
+            "body_ratio_threshold"
+        ]
+
+        self.exchange = exchange or "NSE"
+        self.symbolToken = symbolToken
+        self.interval = interval or "1d"
+        self.delta = delta or "3"
+        self.body_ratio_threshold = body_ratio_threshold or "0.5"
+
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
+
+
+class MovementAnalysisResponse:
+    def __init__(self, analysis, short_candle_flag, long_candle_flag, monotonically_increasing, monotonically_dereasing, swing_flag, candles):
+        """ Class defining response for Movement analysis strategy\n
+            Keyword Arguments:\n
+            analysis -- Final analysis: INCONCLUSIVE, SHORT or LONG\n
+            short_candle_flag -- Flag indicating movement deteceted for entering short position\n
+            long_candle_flag -- Flag indicating movement deteceted for entering short position\n
+            monotonically_increasing -- Flag indicating the candles have monotonically increasing sizes\n
+            monotonically_dereasing -- Flag indicating the candles have monotonically decreasing sizes\n
+            swing_flag -- Flag indicating detection of a swing\n
+            candles -- List of Candles\n
+        """
+        self.keys = [
+            "analysis",
+            "short_candle_flag",
+            "long_candle_flag",
+            "monotonically_increasing",
+            "monotonically_dereasing",
+            "swing_flag",
+            "candles"
+        ]
+
+        self.analysis = analysis
+        self.short_candle_flag = short_candle_flag
+        self.long_candle_flag = long_candle_flag
+        self.monotonically_increasing = monotonically_increasing
+        self.monotonically_dereasing = monotonically_dereasing
+        self.swing_flag = swing_flag
+        self.candles = candles
+
+    def get_dict(self):
+        return {k: self.__dict__[k] for k in self.keys}
+
+    def get_summary(self):
+        return f'''Analyis: {self.analysis}
+        short_candle_flag: {self.short_candle_flag}\n
+        long_candle_flag: {self.long_candle_flag}\n
+        monotonically_increasing: {self.monotonically_increasing}\n
+        monotonically_dereasing: {self.monotonically_dereasing}\n
+        swing_flag: {self.swing_flag}'''
