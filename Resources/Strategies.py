@@ -1,13 +1,12 @@
-from Utils.Utils import get_candles
-from datetime import datetime, timedelta
-from typing import List
+from Utils.Utils import analyze_movement
 from flask.json import jsonify
 from flask_restful import Resource, reqparse
-from Models.models import Candle, HistoryParams
-from Utils.SmartAPI import get_connection, get_history
+from Models.models import MovementAnalysisParams, MovementAnalysisResponse
+from Utils.SmartAPI import get_connection
 
 parser = reqparse.RequestParser()
-parser.add_argument('symbolToken', type=str)
+parser.add_argument('exchange', type=str, required=False)
+parser.add_argument('symbolToken', type=str, required=True)
 parser.add_argument('interval', type=str, default="ONE_DAY", required=False)
 parser.add_argument('frequency', type=int, default=3, required=False)
 parser.add_argument('body_ratio_threshold', type=float, default=0.45, required=False)
@@ -25,51 +24,14 @@ class MovementAnalysis(Resource):
                 "frequency": "3"\n
             }
         """
-        try:
-            args = parser.parse_args()
-            symbolToken = args['symbolToken']
-            interval = args['interval']
-            delta = args['frequency']
-            body_ratio_threshold = args['body_ratio_threshold']
+        args = parser.parse_args()
+        exchange = args['exchange']
+        symbolToken = args['symbolToken']
+        interval = args['interval']
+        delta = args['frequency']
+        body_ratio_threshold = args['body_ratio_threshold']
 
-            connection, data = get_connection()
-            today = datetime.now()
-            before = datetime.now() - timedelta(days=delta)
-            history = get_history(connection, HistoryParams({
-                "exchange": "NSE",
-                "symboltoken": symbolToken,
-                "interval": interval,
-                "fromdate": before.strftime("%Y-%m-%d %H:%M"),
-                "todate": today.strftime("%Y-%m-%d %H:%M")
-            }))
-        except Exception as e:
-            return {"message": f"An error occurred while getting historic data: {e}."}, 500
-        
-        candles: List[Candle] = get_candles(history["data"])
-        candle_sizes = [candle.size for candle in candles]
+        connection, data = get_connection()
+        result: MovementAnalysisResponse = analyze_movement(connection, MovementAnalysisParams(exchange, symbolToken, interval, delta, body_ratio_threshold))
 
-        short_candle_flag: bool = candles[0].color == "green" and candles[1].color == "green" and candles[2].color == "red"
-        long_candle_flag: bool = candles[0].color == "red" and candles[1].color == "red" and candles[2].color == "green"
-        monotonically_increasing = all(x < y for x, y in zip(candle_sizes, candle_sizes[1:]))
-        monotonically_dereasing = all(x > y for x, y in zip(candle_sizes, candle_sizes[1:]))
-        body_proportion_flag = all([candle.get_body_ratio() >= body_ratio_threshold for candle in candles])
-        swing_flag = candles[1].close >= candles[0].close and candles[1].close >= candles[2].close
-
-        analysis = "INCONCLUSIVE"
-        if monotonically_increasing and body_proportion_flag and swing_flag:
-            if short_candle_flag:
-                analysis = "SHORT"
-            elif long_candle_flag:
-                analysis = "LONG"
-
-        response = {
-            "candles": [candle.get_dict() for candle in candles],
-            "short_candle_flag": short_candle_flag,
-            "long_candle_flag": long_candle_flag,
-            "monotonically_increasing": monotonically_increasing,
-            "monotonically_dereasing": monotonically_dereasing,
-            "swing_flag": swing_flag,
-            "analysis": analysis
-        }
-
-        return jsonify(response)
+        return jsonify(result.get_dict())
