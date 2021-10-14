@@ -92,13 +92,12 @@ def holdings(update: Update, context: CallbackContext) -> None:
 
 def history(update: Update, context: CallbackContext) -> None:
     """Get historical data."""
-    historicParams = HistoryParams({
-        "exchange": context.args[0] or "NSE",
-        "symboltoken": context.args[1],
-        "interval": get_interval(context.args[2]),
-        "fromdate": get_formatted_date(context.args[3]),
-        "todate": get_formatted_date(context.args[4])
-    })
+    historicParams = HistoryParams(
+        exchange=context.args[0] or "NSE",
+        symboltoken=context.args[1],
+        interval=get_interval(context.args[2]),
+        fromdate=get_formatted_date(context.args[3]),
+        todate=get_formatted_date(context.args[4]))
 
     connection, data = get_connection()
     if connection is not None:
