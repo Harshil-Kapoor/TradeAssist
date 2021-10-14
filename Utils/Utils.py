@@ -43,7 +43,7 @@ def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -
         before = datetime.now() - timedelta(days=int(params.delta))
         history = get_history(connection, HistoryParams({
             "exchange": params.exchange,
-            "symboltoken": params.symboltoken,
+            "symboltoken": params.symbolToken,
             "interval": params.interval,
             "fromdate": before.strftime("%Y-%m-%d %H:%M"),
             "todate": today.strftime("%Y-%m-%d %H:%M")
