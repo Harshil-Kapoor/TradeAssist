@@ -40,7 +40,7 @@ def get_formatted_date(date: str) -> str:
 def analyze_movement(connection: SmartConnect, params: MovementAnalysisParams) -> MovementAnalysisResponse:
     try:
         today = datetime.now()
-        before = datetime.now() - timedelta(days=params.delta)
+        before = datetime.now() - timedelta(days=int(params.delta))
         history = get_history(connection, HistoryParams({
             "exchange": params.exchange,
             "symboltoken": params.symboltoken,
