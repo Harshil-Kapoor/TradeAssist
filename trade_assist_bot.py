@@ -12,9 +12,9 @@ import logging
 import os
 from telegram import Update
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext, MessageHandler, Filters
-from Models.models import HistoryParams
+from Models.models import HistoryParams, MovementAnalysisParams, MovementAnalysisResponse
 from Utils.SmartAPI import get_connection, get_history, get_holding, get_position
-from Utils.Utils import format_holdings, format_positions, get_candles, get_formatted_date, get_interval
+from Utils.Utils import analyze_movement, format_holdings, format_positions, get_candles, get_formatted_date, get_interval
 
 # Enable logging
 logging.basicConfig(
@@ -119,6 +119,28 @@ def history(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(candle)
 
 
+def analyzeMovement(update: Update, context: CallbackContext) -> None:
+    """Perform Monement analysis."""
+    params = MovementAnalysisParams(
+        symbolToken=context.args[0],
+        interval=context.args[1],
+        delta=context.args[2],
+        body_ratio_threshold=context.args[3],
+        exchange=context.args[5])
+
+    connection, data = get_connection()
+    if connection is not None:
+        update.message.reply_text("Connection established!")
+    else:
+        return
+
+    result: MovementAnalysisResponse = analyze_movement(connection, params)
+    if result is not None:
+        update.message.reply_text("Analysis preformed:")
+
+    update.message.reply_text(result.get_summary())
+
+
 def inlinequery(update: Update, context: CallbackContext) -> None:
     """Handle the inline query."""
     query = update.inline_query.query.split(' ')
@@ -170,6 +192,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("positions", positions))
     dispatcher.add_handler(CommandHandler("holdings", holdings))
     dispatcher.add_handler(CommandHandler("history", history))
+    dispatcher.add_handler(CommandHandler("analyzeMovement", analyzeMovement))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text, echo))
