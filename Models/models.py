@@ -1,23 +1,54 @@
 class OrderParams:
-    def __init__(self, obj):
+    def __init__(self, tradingsymbol, symboltoken, transactiontype, price, squareoff, stoploss, quantity, variety, exchange, ordertype, producttype, duration) -> None:
         """ Class defining Order structure\n
-        Accepts Structure:\n
-        {
-            "variety": "NORMAL",
-            "tradingsymbol": "SBIN-EQ",
-            "symboltoken": "3045",
-            "transactiontype": "BUY",
-            "exchange": "NSE",
-            "ordertype": "LIMIT",
-            "producttype": "INTRADAY",
-            "duration": "DAY",
-            "price": "19500",
-            "squareoff": "0",
-            "stoploss": "0",
-            "quantity": "1"\n
+            Keyword Arguments:\n
+            tradingsymbol -- Symbol to trade\n
+            symboltoken -- Token for symbol to trade\n
+            transactiontype -- Transaction Type\n
+            price -- Price\n
+            squareoff -- Square Off\n
+            stoploss -- Stoploss\n
+            quantity -- Quantity\n
+            variety -- Variety\n
+            exchange -- Exchange\n
+            ordertype -- Order type\n
+            producttype -- Product type\n
+            duration -- Duration\n
+        """
+        self.tradingsymbol = tradingsymbol
+        self.symboltoken = symboltoken
+        self.transactiontype = transactiontype
+        self.price = price
+        self.squareoff = squareoff
+        self.stoploss = stoploss
+        self.quantity = quantity
+        self.variety = variety
+        self.exchange = exchange
+        self.ordertype = ordertype
+        self.producttype = producttype
+        self.duration = duration
+
+    @classmethod
+    def fromJson(cls, obj):
+        """ Create OrderParams from a json string
+            Accepts Structure:\n
+            {
+                "variety": "NORMAL",
+                "tradingsymbol": "SBIN-EQ",
+                "symboltoken": "3045",
+                "transactiontype": "BUY",
+                "exchange": "NSE",
+                "ordertype": "LIMIT",
+                "producttype": "INTRADAY",
+                "duration": "DAY",
+                "price": "19500",
+                "squareoff": "0",
+                "stoploss": "0",
+                "quantity": "1"\n
             }
         """
-        self.keys = [
+        params = cls('', '', '', '', '')
+        params.keys = [
             "tradingsymbol",
             "symboltoken",
             "transactiontype",
@@ -32,23 +63,50 @@ class OrderParams:
             "duration"
         ]
 
-        self.quantity = "1"
-        self.variety = "NORMAL"
-        self.exchange = "NSE"
-        self.ordertype = "LIMIT"
-        self.producttype = "INTRADAY"
-        self.duration = "DAY"
+        params.quantity = "1"
+        params.variety = "NORMAL"
+        params.exchange = "NSE"
+        params.ordertype = "LIMIT"
+        params.producttype = "INTRADAY"
+        params.duration = "DAY"
         for k, v in obj.items():
-            if k in self.keys:
-                self.__setattr__(k, v)
+            if k in params.keys:
+                setattr(params, k, v)
+        return params
 
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
 
 
 class GTTParams:
-    def __init__(self, obj):
+    def __init__(self, tradingsymbol, symboltoken, exchange, producttype, transactiontype, price, qty, disclosedqty, triggerprice, timeperiod) -> None:
         """ Class defining GTT structure\n
+            Keyword Arguments:\n
+            tradingsymbol -- Symbol to trade\n
+            symboltoken -- Token for symbol to trade\n
+            exchange -- Exchange\n
+            producttype -- Product type\n
+            transactiontype -- Transaction type\n
+            price -- Price\n
+            qty -- Quantity\n
+            disclosedqty -- Disclosed Quantity\n
+            triggerprice -- Trigger price\n
+            timeperiod -- Time period\n
+        """
+        self.tradingsymbol = tradingsymbol
+        self.symboltoken = symboltoken
+        self.exchange = exchange
+        self.producttype = producttype
+        self.transactiontype = transactiontype
+        self.price = price
+        self.qty = qty
+        self.disclosedqty = disclosedqty
+        self.triggerprice = triggerprice
+        self.timeperiod = timeperiod
+
+    @classmethod
+    def fromJson(cls, obj):
+        """ Create GTTParams from a json string
             Accepts Structure:\n
             {
                 "tradingsymbol" : "SBIN-EQ",
@@ -63,7 +121,8 @@ class GTTParams:
                 "timeperiod" : 365\n
             }
         """
-        self.keys = [
+        params = cls('', '', '', '', '')
+        params.keys = [
             "tradingsymbol",
             "symboltoken",
             "exchange",
@@ -76,20 +135,37 @@ class GTTParams:
             "timeperiod"
         ]
 
-        self.exchange = "NSE"
-        self.producttype = "MARGIN"
-        self.transactiontype = "BUY"
+        params.exchange = "NSE"
+        params.producttype = "MARGIN"
+        params.transactiontype = "BUY"
         for k, v in obj.items():
-            if k in self.keys:
-                self.__setattr__(k, v)
+            if k in params.keys:
+                setattr(params, k, v)
+        return params
 
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
 
 
 class HistoryParams:
-    def __init__(self, obj):
-        """ Class defining paramteres for getting historic data\n
+    def __init__(self, exchange, symboltoken, interval, fromdate, todate) -> None:
+        """ Class defining HistoryParams structure\n
+            Keyword Arguments:\n
+            exchange -- Exchange\n
+            symboltoken -- Token for symbol to trade\n
+            interval -- Interval\n
+            fromdate -- From date\n
+            todate -- To date\n
+        """
+        self.exchange = exchange
+        self.symboltoken = symboltoken
+        self.interval = interval
+        self.fromdate = fromdate
+        self.todate = todate
+
+    @classmethod
+    def fromJson(cls, obj):
+        """ Create HistoryParams from a json string
             Accepts Structure:\n
             {
                 "exchange": "NSE",
@@ -99,7 +175,8 @@ class HistoryParams:
                 "todate": "2021-02-08 09:16"\n
             }
         """
-        self.keys = [
+        params = cls('', '', '', '', '')
+        params.keys = [
             "exchange",
             "symboltoken",
             "interval",
@@ -107,11 +184,12 @@ class HistoryParams:
             "todate"
         ]
 
-        self.exchange = "NSE"
-        self.interval = "ONE_MINUTE"
+        params.exchange = "NSE"
+        params.interval = "ONE_MINUTE"
         for k, v in obj.items():
-            if k in self.keys:
-                self.__setattr__(k, v)
+            if k in params.keys:
+                setattr(params, k, v)
+        return params
 
     def get_dict(self):
         return {k: self.__dict__[k] for k in self.keys}
