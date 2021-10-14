@@ -138,9 +138,7 @@ def analyzeMovement(update: Update, context: CallbackContext) -> None:
     if result is not None:
         update.message.reply_text("Analysis preformed:")
 
-    update.message.reply_text(result[0])
-    update.message.reply_text(result[1])
-    # update.message.reply_text(result.get_summary())
+    update.message.reply_text(result.get_summary())
 
 
 def inlinequery(update: Update, context: CallbackContext) -> None:
