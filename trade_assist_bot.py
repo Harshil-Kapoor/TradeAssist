@@ -111,6 +111,8 @@ def history(update: Update, context: CallbackContext) -> None:
             update.message.reply_text("History has been retrieved!")
         else:
             update.message.reply_text("Could not get History...")
+            for k in candles.keys():
+                update.message.reply_text(f"{k}:{candles[k]}")
             return
 
     lines = [candle.get_summary() for candle in get_candles(candles["data"])]
